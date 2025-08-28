@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>跨平台解密 —— Demo</title>
+<style>
+  body{font-family:system-ui, -apple-system, "Helvetica Neue", Arial; background:#f4f6f8; color:#222; padding:24px;}
+  .card{max-width:760px;margin:18px auto;padding:22px;background:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(15,20,25,0.06);}
+  h1{margin:0 0 8px;font-size:20px;}
+  p.lead{margin:0 0 18px;color:#555;}
+  .prompt{font-weight:600;margin:12px 0;}
+  input[type="text"]{width:100%;padding:10px;border-radius:6px;border:1px solid #ddd;font-size:16px;}
+  .btn{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:8px;background:#2b79ff;color:#fff;border:none;cursor:pointer;}
+  .btn.secondary{background:#e6eefb;color:#0b66ff;}
+  .hint{margin-top:12px;padding:10px;background:#fff8e6;border-left:4px solid #ffcc3b;border-radius:6px;display:none;}
+  .msg{margin-top:12px;padding:10px;border-radius:6px;}
+  .msg.success{background:#e6ffef;border:1px solid #8fe3b1;color:#045e2a;}
+  .msg.error{background:#fff1f1;border:1px solid #f1a1a1;color:#7a1b1b;}
+  .progress{font-size:13px;color:#666;margin-top:10px;}
+  .small{font-size:13px;color:#666;}
+  footer{margin-top:18px;font-size:13px;color:#888;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>跨平台解密 Demo</h1>
+    <p class="lead">在不同平台获得线索 → 在这里输入密码以解锁下一个提示。页面会记录进度（本地存储）。</p>
+
+    <div id="game">
+      <div class="prompt" id="promptTxt"></div>
+      <input id="answerInput" type="text" placeholder="在此输入密码，然后按回车或点提交" autocomplete="off" />
+      <div>
+        <button id="submitBtn" class="btn">提交</button>
+        <button id="hintBtn" class="btn secondary">显示提示</button>
+      </div>
+
+      <div id="hintBox" class="hint"></div>
+      <div id="message" class="msg" style="display:none"></div>
+
+      <div id="nextArea" style="margin-top:12px;"></div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <footer>
+      <div class="small">提示：这是前端演示版 —— 若要防刷或不希望答案被直接看到，请参见下方“进阶建议”。</div>
+    </footer>
+  </div>
+
+<script>
+/*
+  简单节点引擎：
+  - nodes 数组定义每一步的提示、正确答案（明文，示例用）
+  - production: 若不想把答案暴露在客户端，应把校验做在服务端，或保存答案的 hash 并用 Web Crypto 校验
+*/
+const nodes = [
+  {
+    id: 1,
+    prompt: "Node 1（示例）\n提示：公众号图片右下角有 4 个彩色方块，按顺序拼出单词并输入（字母全部大写）",
+    answer: "OPEN",
+    hint: "想一下颜色 -> 对应字母。示例：红=O、绿=P、蓝=E、黄=N（这里只是示例）",
+    successText: "干得好！下一步去飞书文档（或你指定的下一个平台）找下一条线索。"
+  },
+  {
+    id: 2,
+    prompt: "Node 2（示例）\n提示：飞书共享文档第3行第2个字是密码（全大写）",
+    answer: "KEY",
+    hint: "打开飞书文档并按行读，第3行第2个字就是答案（转为大写）",
+    successText: "不错！去 WoW 截图里找 NPC 名称的首字母，拼出最终密码。"
+  },
+  {
+    id: 3,
+    prompt: "最终节点（示例）\n提示：四个 NPC 名称的首字母拼成答案，输入后你将看到兑换码。",
+    answer: "GIFT",
+    hint: "查看截图右上角 NPC 名称，取首字母，按提示顺序拼写。",
+    successText: "恭喜！你已完成解密。兑换码：<strong>DEMO-2025-ABC</strong> （示例）"
+  }
+];
+
+let currentNodeId = parseInt(localStorage.getItem('puzzle_current_node') || '1', 10);
+
+const el = {
+  promptTxt: document.getElementById('promptTxt'),
+  answerInput: document.getElementById('answerInput'),
+  submitBtn: document.getElementById('submitBtn'),
+  hintBtn: document.getElementById('hintBtn'),
+  hintBox: document.getElementById('hintBox'),
+  message: document.getElementById('message'),
+  nextArea: document.getElementById('nextArea'),
+  progress: document.getElementById('progress')
+};
+
+function findNode(id){
+  return nodes.find(n => n.id === id);
+}
+
+function renderProgress(){
+  el.progress.textContent = `进度：第 ${currentNodeId} / ${nodes.length} 步`;
+}
+
+function loadNode(id){
+  const node = findNode(id);
+  if(!node) {
+    el.promptTxt.innerHTML = "未知节点";
+    return;
+  }
+  currentNodeId = node.id;
+  localStorage.setItem('puzzle_current_node', String(currentNodeId));
+  el.promptTxt.innerText = node.prompt;
+  el.hintBox.style.display = 'none';
+  el.hintBox.innerText = node.hint;
+  el.message.style.display = 'none';
+  el.answerInput.value = "";
+  el.answerInput.focus();
+  el.nextArea.innerHTML = "";
+  renderProgress();
+}
+
+async function checkAnswer(){
+  const node = findNode(currentNodeId);
+  if(!node) return;
+  const raw = el.answerInput.value.trim();
+  if(!raw){
+    showMessage('请输入答案再提交。','error');
+    return;
+  }
+  const input = raw.toUpperCase();
+  // 简单校验（前端演示）
+  if(input === node.answer.toUpperCase()){
+    showMessage(node.successText,'success');
+    // 如果有下个节点，展示「下一步按钮」
+    const nextNode = findNode(currentNodeId + 1);
+    if(nextNode){
+      const btn = document.createElement('button');
+      btn.className = 'btn';
+      btn.innerText = '前往下一步';
+      btn.onclick = () => loadNode(nextNode.id);
+      el.nextArea.appendChild(btn);
+      // advance: auto set progress to next (不自动跳转，保留由玩家点)
+      // localStorage.setItem('puzzle_current_node', String(nextNode.id));
+    } else {
+      // 最后一步：清理或保存完成状态
+      localStorage.setItem('puzzle_finished', 'true');
+    }
+  }else{
+    showMessage('答案不对，再试一次或点提示。','error');
+  }
+}
+
+function showMessage(text, type){
+  el.message.style.display = 'block';
+  el.message.className = 'msg ' + (type === 'success' ? 'success':'error');
+  el.message.innerHTML = text;
+}
+
+el.submitBtn.addEventListener('click', checkAnswer);
+el.hintBtn.addEventListener('click', () => {
+  el.hintBox.style.display = el.hintBox.style.display === 'none' ? 'block' : 'none';
+});
+el.answerInput.addEventListener('keydown', e => {
+  if(e.key === 'Enter'){ checkAnswer(); }
+});
+
+// on load
+document.addEventListener('DOMContentLoaded', () => {
+  // 如果已经完成，直接显示完成页
+  if(localStorage.getItem('puzzle_finished') === 'true'){
+    currentNodeId = nodes.length;
+    loadNode(currentNodeId);
+    showMessage('你已经完成了本次演示（本地存储）。若要重玩请点击下方按钮。','success');
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'btn secondary';
+    resetBtn.textContent = '重置进度';
+    resetBtn.onclick = () => {
+      localStorage.removeItem('puzzle_current_node');
+      localStorage.removeItem('puzzle_finished');
+      currentNodeId = 1;
+      loadNode(1);
+      el.message.style.display = 'none';
+    };
+    el.nextArea.appendChild(resetBtn);
+  } else {
+    loadNode(currentNodeId);
+  }
+});
+</script>
+</body>
+</html>
