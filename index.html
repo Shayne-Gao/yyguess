@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>七夕特别礼物 💝</title>
+<title>小尾巴的七夕礼物 💝</title>
 <style>
   body {
     font-family: "Helvetica Neue", Arial, sans-serif;
@@ -114,12 +114,13 @@
   <!-- 开场页面 -->
   <div id="intro" class="card">
     <div class="hearts">💖✨💝</div>
-    <h1>七夕特别的礼物</h1>
+    <h1>Zyy 你好！我是你的七夕礼物！</h1>
     <p id="introText">
-      亲爱的，今天是属于我们的七夕节 💕<br/>
-      这里有一份我为你准备的小小解谜礼物 🎁<br/>
+      欢迎来到给小尾巴准备的线上解谜游戏-七夕特供版 💕<br>
+      聪明机灵的你将会在一个又一个的问题中寻找答案 💌<br/>
       每一道题目，都是我们故事的一部分 ✨<br/>
-      希望你能带着笑容，一步步走向最终的惊喜 💌
+      希望你能带着笑容，一步步走向最终的胜利，获得活动纪念品嗷! 🎁 <br>
+      From  爱你的男朋友 gwlj
     </p>
     <div class="music-control">
       <button id="musicBtn" class="btn secondary">播放音乐 🎶</button>
@@ -145,7 +146,7 @@
       <div id="nextArea" style="margin-top:12px;"></div>
       <div id="progress" style="margin-top:10px; font-size:13px; color:#888;"></div>
     </div>
-    <footer>Happy 七夕 ❤️ 爱在解谜的每一步。</footer>
+    <footer>Happy 七夕 ❤️ 爱在解谜的每一步</footer>
   </div>
 
   <!-- 背景音乐 -->
@@ -157,23 +158,52 @@
 const nodes = [
   {
     id: 1,
-    prompt: "第一关 💕：在我们的合照里，你最喜欢的那个笑容对应的月份，就是密码（输入月份数字）。",
-    answer: "8",
-    hint: "七夕在八月哦～",
+    prompt: "第一关 💕 \n 那里是我们初次相识的地方，是我们的第一个好友关系。\n 从普通好友开始，你就这么在我的好友列表里待了好多年。\n 你会打趣的把英文念成拼音来称呼我，还经常给我乱起名字。 \n 渐渐的，普通好友也升级成了亲密好友 \n（密码是 4 位数字）",
+    answer: "todo",
+    hint: "第一题的提示直接送给你！是在#后面的数字哦",
     successText: "太棒了！💖 继续前往下一关，更多的回忆在等你～"
   },
   {
     id: 2,
-    prompt: "第二关 🌙：还记得第一次一起看电影吗？那部电影的第一个字母（大写）就是密码。",
-    answer: "L",
-    hint: "答案在我们第一次电影院的票根里～",
-    successText: "好浪漫！💌 继续前进吧。"
+    prompt: "第二关 🌙 \n 渐渐的我们的关系不止于战网，还在那里有了自己的聊天室，这天就聊不完啦。细心的你是否发现，跟你聊天的人，不太一样了呢? （密码是 3 位数字）",
+    answer: "520",
+    hint: "第二关的提示需要说出一个你喜欢我的特质才可以获得哦！",
+    successText: "好聪明爱你哟！💌 继续前进吧。"
+  },
+
+    {
+    id: 3,
+    prompt: "第三关 ✉️ \n 除了聊天，我们做的最多的事情就是一起玩各种各样的游戏啦，打心底里因为有一个你这样的游戏搭子而感到开心，更开心的是这个人还是我女朋友！\n  很喜欢跟你玩游戏，每个游戏都显得超好玩 \n 我们的头像还是情侣的多配呀 （密码 7 个汉字 没有空格）。",
+    answer: "一只猫到此一游",
+    hint: "Steam 最近有没有奇怪的信息？",
+    successText: "恭喜！我要做你最好的游戏搭子！💪"
+  },
+    {
+    id: 4,
+    prompt: "第四关 🎮 \n 还记得我们玩过什么游戏吗？（密码是 4 个颜色组成的 4 个汉字）\n  1.女童常伴少东家 \n 2. 案桌横放三寿司 \n 3. 遗忘之城守夜长 \n 4. 失踪山谷厕纸凉 ",
+    answer: "红绿金蓝",
+    hint: "第四关的提示需要你语音叫我一声好听的来换取哦！",
+    successText: "记忆力好棒！我们以后还有会有更多美好的回忆嗷！恭喜过关！"
+  },
+    {
+    id: 5,
+    prompt: "第五关 🐱 \n 除了 Steam，在其他游戏里也有我们亲密的痕迹！俗话说 ：\n 峡谷夜深两人行，\n软毛盾影伤痕明。\n屏前回首映星光，\n数字轻语藏秘密。\n指尖微动击斩敌，\n战绩之中寻踪迹。\n输出高低心中记，\n一览数值解谜题。\n （密码是一个 8 位数字）",
+    answer: "todo",
+    hint: "第五关的提示需要你提供一张有你的照片来换取哦！",
+    successText: "恭喜过关小猫咪！离胜利还差两步啦！"
+  },
+    {
+    id: 6,
+    prompt: "第六关 ⌛️ \n 飞书文档的创建日期",
+    answer: "07120336",
+    hint: "Steam 最近有没有奇怪的信息？",
+    successText: "恭喜通关！🎉 七夕快乐，我爱你 ❤️ 礼物在等你 👉 <strong>https://example.com/yourgift</strong>"
   },
   {
-    id: 3,
-    prompt: "最后一关 🌹：输入你对我常说的三个字（拼音大写）。",
-    answer: "WOAI NI",
-    hint: "三个字，是你每天挂在嘴边的～",
+    id: 7,
+    prompt: "第七关 🎮 \n 去魔兽世界纳格兰找我。",
+    answer: "0905",
+    hint: "Steam 最近有没有奇怪的信息？",
     successText: "恭喜通关！🎉 七夕快乐，我爱你 ❤️ 礼物在等你 👉 <strong>https://example.com/yourgift</strong>"
   }
 ];
@@ -204,7 +234,7 @@ function loadNode(id){
   if(!node) return;
   currentNodeId = node.id;
   localStorage.setItem('puzzle_current_node', String(currentNodeId));
-  el.promptTxt.innerText = node.prompt;
+  el.promptTxt.innerHTML = node.prompt.replace(/\n/g, "<br/>");
   el.hintBox.classList.add('hidden');
   el.hintBox.innerText = node.hint;
   el.message.classList.add('hidden');
