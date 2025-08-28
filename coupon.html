@@ -110,14 +110,14 @@
         count: 1,
         desc: "兑换一次真心实意的拥抱。",
         usage: "拥抱时间不少于30秒。",
-        img: "https://cdn-icons-png.flaticon.com/512/616/616408.png"
+        img: "https://cdn-icons-mp4.flaticon.com/512/12999/12999703.mp4"
       },
       {
         name: "亲亲券",
         count: 1,
         desc: "兑换一次主动亲吻。",
         usage: "可指定脸颊/额头/嘴唇。",
-        img: "https://cdn-icons-png.flaticon.com/512/4206/4206277.png"
+        img: "https://cdn-icons-mp4.flaticon.com/512/15600/15600675.mp4"
       }
     ];
 
@@ -129,23 +129,30 @@
       }
     });
 
-    function drawCoupon() {
-      if (pool.length === 0) {
-        alert("所有券都抽完啦！");
-        return;
-      }
-      const idx = Math.floor(Math.random() * pool.length);
-      const c = pool.splice(idx, 1)[0];
+function drawCoupon() {
+  if (pool.length === 0) {
+    alert("所有券都抽完啦！");
+    return;
+  }
+  const idx = Math.floor(Math.random() * pool.length);
+  const c = pool.splice(idx, 1)[0];
 
-      const card = document.getElementById("couponCard");
-      card.innerHTML = `
-        <img src="${c.img}" alt="${c.name}">
-        <h2>${c.name}</h2>
-        <p><b>说明：</b>${c.desc}</p>
-        <p><b>使用方法：</b>${c.usage}</p>
-      `;
-      card.style.display = "block";
-    }
+  let mediaEl = "";
+  if (c.img.endsWith(".mp4")) {
+    mediaEl = `<video src="${c.img}" autoplay loop muted playsinline style="max-width:200px; border-radius:12px;"></video>`;
+  } else {
+    mediaEl = `<img src="${c.img}" alt="${c.name}" style="max-width:200px;">`;
+  }
+
+  const card = document.getElementById("couponCard");
+  card.innerHTML = `
+    ${mediaEl}
+    <h2>${c.name}</h2>
+    <p><b>说明：</b>${c.desc}</p>
+    <p><b>使用方法：</b>${c.usage}</p>
+  `;
+  card.style.display = "block";
+}
   </script>
 </body>
 </html>
