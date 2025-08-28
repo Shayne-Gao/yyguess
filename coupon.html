@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>恋爱抽券机</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", "Microsoft Yahei", sans-serif;
+      background: linear-gradient(180deg, #ffe6f0, #fff0f5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #ff6699;
+      text-shadow: 1px 1px #fff;
+      margin-bottom: 10px;
+    }
+    .btn {
+      background: #ff99cc;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.1s;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    .card {
+      margin-top: 20px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      padding: 20px;
+      width: 320px;
+      text-align: center;
+      display: none;
+      animation: fadeIn 0.6s ease forwards;
+    }
+    .card img {
+      max-width: 200px;
+      margin-bottom: 10px;
+    }
+    .card h2 {
+      margin: 10px 0;
+      color: #ff6699;
+    }
+    .card p {
+      font-size: 14px;
+      color: #444;
+      margin: 6px 0;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🎁 恋爱抽券机 🎁</h1>
+  <button class="btn" onclick="drawCoupon()">点我抽一张券</button>
+  <div id="couponCard" class="card"></div>
+
+  <script>
+    // 配置券列表
+    const coupons = [
+      {
+        name: "按摩券",
+        count: 2,
+        desc: "可兑换一次10分钟以上的按摩服务。",
+        usage: "出示后立即兑现，不可推迟。",
+        img: "https://cdn-icons-png.flaticon.com/512/3480/3480398.png"
+      },
+      {
+        name: "吵架不生气券",
+        count: 1,
+        desc: "当发生争执时，立刻和好如初。",
+        usage: "出示后必须立即拥抱和解。",
+        img: "https://cdn-icons-png.flaticon.com/512/616/616408.png"
+      },
+      {
+        name: "分手复合券",
+        count: 1,
+        desc: "若一时冲动说分手，可立即复合。",
+        usage: "出示后需真诚沟通，立刻作数。",
+        img: "https://cdn-icons-png.flaticon.com/512/4206/4206277.png"
+      },
+      {
+        name: "言听计从券",
+        count: 1,
+        desc: "一天内，所有合理的小要求都要答应。",
+        usage: "使用前需提前告知，有效期为一天。",
+        img: "https://cdn-icons-png.flaticon.com/512/2552/2552801.png"
+      },
+      {
+        name: "美食券",
+        count: 1,
+        desc: "由对方请吃一顿指定美食。",
+        usage: "消费额度需在约定范围内。",
+        img: "https://cdn-icons-png.flaticon.com/512/857/857681.png"
+      },
+      {
+        name: "拥抱券",
+        count: 1,
+        desc: "兑换一次真心实意的拥抱。",
+        usage: "拥抱时间不少于30秒。",
+        img: "https://cdn-icons-png.flaticon.com/512/616/616408.png"
+      },
+      {
+        name: "亲亲券",
+        count: 1,
+        desc: "兑换一次主动亲吻。",
+        usage: "可指定脸颊/额头/嘴唇。",
+        img: "https://cdn-icons-png.flaticon.com/512/4206/4206277.png"
+      }
+    ];
+
+    // 展平：考虑张数
+    let pool = [];
+    coupons.forEach(c => {
+      for (let i = 0; i < c.count; i++) {
+        pool.push(c);
+      }
+    });
+
+    function drawCoupon() {
+      if (pool.length === 0) {
+        alert("所有券都抽完啦！");
+        return;
+      }
+      const idx = Math.floor(Math.random() * pool.length);
+      const c = pool.splice(idx, 1)[0];
+
+      const card = document.getElementById("couponCard");
+      card.innerHTML = `
+        <img src="${c.img}" alt="${c.name}">
+        <h2>${c.name}</h2>
+        <p><b>说明：</b>${c.desc}</p>
+        <p><b>使用方法：</b>${c.usage}</p>
+      `;
+      card.style.display = "block";
+    }
+  </script>
+</body>
+</html>
