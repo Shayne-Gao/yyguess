@@ -3,91 +3,153 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>跨平台解密 —— Demo</title>
+<title>七夕解谜小冒险 💖</title>
 <style>
-  body{font-family:system-ui, -apple-system, "Helvetica Neue", Arial; background:#f4f6f8; color:#222; padding:24px;}
-  .card{max-width:760px;margin:18px auto;padding:22px;background:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(15,20,25,0.06);}
-  h1{margin:0 0 8px;font-size:20px;}
-  p.lead{margin:0 0 18px;color:#555;}
-  .prompt{font-weight:600;margin:12px 0;}
-  input[type="text"]{width:100%;padding:10px;border-radius:6px;border:1px solid #ddd;font-size:16px;}
-  .btn{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:8px;background:#2b79ff;color:#fff;border:none;cursor:pointer;}
-  .btn.secondary{background:#e6eefb;color:#0b66ff;}
-  .hint{margin-top:12px;padding:10px;background:#fff8e6;border-left:4px solid #ffcc3b;border-radius:6px;display:none;}
-  .msg{margin-top:12px;padding:10px;border-radius:6px;}
-  .msg.success{background:#e6ffef;border:1px solid #8fe3b1;color:#045e2a;}
-  .msg.error{background:#fff1f1;border:1px solid #f1a1a1;color:#7a1b1b;}
-  .progress{font-size:13px;color:#666;margin-top:10px;}
-  .small{font-size:13px;color:#666;}
-  footer{margin-top:18px;font-size:13px;color:#888;}
+  body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #ffe6eb, #fff0f5);
+    color: #333;
+    padding: 24px;
+    background-attachment: fixed;
+  }
+  .card {
+    max-width: 760px;
+    margin: 18px auto;
+    padding: 22px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(255, 120, 160, 0.25);
+    position: relative;
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 24px;
+    color: #e25590;
+    text-align: center;
+  }
+  p.lead {
+    margin: 0 0 18px;
+    color: #555;
+    text-align: center;
+  }
+  .prompt {
+    font-weight: 600;
+    margin: 12px 0;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #f3c1d8;
+    font-size: 16px;
+  }
+  .btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #ff7aa2;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: #ff5a8c; }
+  .btn.secondary {
+    background: #ffe4ec;
+    color: #d6336c;
+    border: 1px solid #f9b5d1;
+  }
+  .hint {
+    margin-top: 12px;
+    padding: 10px;
+    background: #fff8f9;
+    border-left: 4px solid #ffb3c1;
+    border-radius: 6px;
+    display: none;
+  }
+  .msg {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 6px;
+  }
+  .msg.success {
+    background: #fff0f5;
+    border: 1px solid #f5a9c1;
+    color: #a1104d;
+  }
+  .msg.error {
+    background: #fff5f7;
+    border: 1px solid #f3b0b0;
+    color: #9a1b1b;
+  }
+  .progress { font-size: 13px; color: #888; margin-top: 10px; }
+  .small { font-size: 13px; color: #999; text-align: center; }
+  footer { margin-top: 18px; font-size: 13px; color: #888; text-align: center; }
+  /* 小爱心动画 */
+  .hearts {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    color: #ff5a8c;
+    animation: float 3s infinite;
+  }
+  @keyframes float {
+    0% { transform: translate(-50%,0) scale(1); opacity: 1; }
+    50% { transform: translate(-50%,-20px) scale(1.2); opacity: 0.7; }
+    100% { transform: translate(-50%,-40px) scale(1); opacity: 0; }
+  }
 </style>
 </head>
 <body>
   <div class="card">
-    <h1>跨平台解密 Demo</h1>
-    <p class="lead">在不同平台获得线索 → 在这里输入密码以解锁下一个提示。页面会记录进度（本地存储）。</p>
+    <div class="hearts">💖</div>
+    <h1>七夕解谜小冒险</h1>
+    <p class="lead">亲爱的，跟随这条爱的线索，一步步走向惊喜吧 ✨</p>
 
     <div id="game">
       <div class="prompt" id="promptTxt"></div>
-      <input id="answerInput" type="text" placeholder="在此输入密码，然后按回车或点提交" autocomplete="off" />
+      <input id="answerInput" type="text" placeholder="输入答案..." autocomplete="off" />
       <div>
-        <button id="submitBtn" class="btn">提交</button>
-        <button id="hintBtn" class="btn secondary">显示提示</button>
+        <button id="submitBtn" class="btn">提交答案</button>
+        <button id="hintBtn" class="btn secondary">小提示 💌</button>
       </div>
 
       <div id="hintBox" class="hint"></div>
       <div id="message" class="msg" style="display:none"></div>
-
       <div id="nextArea" style="margin-top:12px;"></div>
       <div class="progress" id="progress"></div>
     </div>
 
     <footer>
-      <div class="small">提示：这是前端演示版 —— 若要防刷或不希望答案被直接看到，请参见下方“进阶建议”。</div>
+      <div class="small">Happy 七夕 ❤️ 爱在解谜的每一步。</div>
     </footer>
   </div>
 
 <script>
-/*
-  简单节点引擎：
-  - nodes 数组定义每一步的提示、正确答案（明文，示例用）
-  - production: 若不想把答案暴露在客户端，应把校验做在服务端，或保存答案的 hash 并用 Web Crypto 校验
-*/
 const nodes = [
   {
     id: 1,
-    prompt: "Node 1（示例）\n提示：公众号图片右下角有 4 个彩色方块，按顺序拼出单词并输入（字母全部大写）",
-    answer: "OPEN",
-    hint: "想一下颜色 -> 对应字母。示例：红=O、绿=P、蓝=E、黄=N（这里只是示例）",
-    successText: "干得好！下一步去飞书文档（或你指定的下一个平台）找下一条线索。"
+    prompt: "第一关 💕：\n在我们的合照里，你最喜欢的那个笑容对应的月份，就是密码（输入月份数字）。",
+    answer: "8",
+    hint: "七夕在八月哦～",
+    successText: "太棒了！💖 继续前往下一关，更多的回忆在等你～"
   },
   {
     id: 2,
-    prompt: "Node 2（示例）\n提示：飞书共享文档第3行第2个字是密码（全大写）",
-    answer: "KEY",
-    hint: "打开飞书文档并按行读，第3行第2个字就是答案（转为大写）",
-    successText: "不错！去 WoW 截图里找 NPC 名称的首字母，拼出最终密码。"
-  },
-    {
-    id: 3,
-    prompt: "Node 2（示例）\n提示：飞书共享文ERERERERERERER码（全大写）",
-    answer: "KEY",
-    hint: "打开飞书文档并按行读，第3行第2个字就是答案（转为大写）",
-    successText: "不错！去 WoW 截图里找 NPC 名称的首字母，拼出最终密码。"
-  },
-   {
-    id: 4,
-    prompt: "Node 2（示例）\n提示：WERWERWERWER）",
-    answer: "KEY",
-    hint: "打开飞书文档并按行读，第3行第2个字就是答案（转为大写）",
-    successText: "不错！去 WoW 截图里找 NPC 名称的首字母，拼出最终密码。"
+    prompt: "第二关 🌙：\n还记得第一次一起看电影吗？那部电影的第一个字母（大写）就是密码。",
+    answer: "L",
+    hint: "答案在我们第一次电影院的票根里～",
+    successText: "好浪漫！💌 继续前进吧。"
   },
   {
-    id: 5,
-    prompt: "最终节点（示例）\n提示：四个 NPC 名称的首字母拼成答案，输入后你将看到兑换码。",
-    answer: "GIFT",
-    hint: "查看截图右上角 NPC 名称，取首字母，按提示顺序拼写。",
-    successText: "恭喜！你已完成解密。兑换码：<strong>DEMO-2025-ABC</strong> （示例）"
+    id: 3,
+    prompt: "最后一关 🌹：\n输入你对我常说的三个字（拼音大写）。",
+    answer: "WOAI NI",
+    hint: "三个字，是你每天挂在嘴边的～",
+    successText: "恭喜通关！🎉 七夕快乐，我爱你 ❤️ 礼物在等你 👉 <strong>https://example.com/yourgift</strong>"
   }
 ];
 
@@ -104,20 +166,12 @@ const el = {
   progress: document.getElementById('progress')
 };
 
-function findNode(id){
-  return nodes.find(n => n.id === id);
-}
-
-function renderProgress(){
-  el.progress.textContent = `进度：第 ${currentNodeId} / ${nodes.length} 步`;
-}
+function findNode(id){ return nodes.find(n => n.id === id); }
+function renderProgress(){ el.progress.textContent = `进度：第 ${currentNodeId} / ${nodes.length} 步`; }
 
 function loadNode(id){
   const node = findNode(id);
-  if(!node) {
-    el.promptTxt.innerHTML = "未知节点";
-    return;
-  }
+  if(!node) return;
   currentNodeId = node.id;
   localStorage.setItem('puzzle_current_node', String(currentNodeId));
   el.promptTxt.innerText = node.prompt;
@@ -130,34 +184,25 @@ function loadNode(id){
   renderProgress();
 }
 
-async function checkAnswer(){
+function checkAnswer(){
   const node = findNode(currentNodeId);
-  if(!node) return;
   const raw = el.answerInput.value.trim();
-  if(!raw){
-    showMessage('请输入答案再提交。','error');
-    return;
-  }
+  if(!raw){ showMessage('请输入答案再提交哦～','error'); return; }
   const input = raw.toUpperCase();
-  // 简单校验（前端演示）
   if(input === node.answer.toUpperCase()){
     showMessage(node.successText,'success');
-    // 如果有下个节点，展示「下一步按钮」
     const nextNode = findNode(currentNodeId + 1);
     if(nextNode){
       const btn = document.createElement('button');
       btn.className = 'btn';
-      btn.innerText = '前往下一步';
+      btn.innerText = '进入下一关 ➡️';
       btn.onclick = () => loadNode(nextNode.id);
       el.nextArea.appendChild(btn);
-      // advance: auto set progress to next (不自动跳转，保留由玩家点)
-      // localStorage.setItem('puzzle_current_node', String(nextNode.id));
     } else {
-      // 最后一步：清理或保存完成状态
       localStorage.setItem('puzzle_finished', 'true');
     }
-  }else{
-    showMessage('答案不对，再试一次或点提示。','error');
+  } else {
+    showMessage('答案不对，再想想～','error');
   }
 }
 
@@ -171,17 +216,13 @@ el.submitBtn.addEventListener('click', checkAnswer);
 el.hintBtn.addEventListener('click', () => {
   el.hintBox.style.display = el.hintBox.style.display === 'none' ? 'block' : 'none';
 });
-el.answerInput.addEventListener('keydown', e => {
-  if(e.key === 'Enter'){ checkAnswer(); }
-});
+el.answerInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ checkAnswer(); } });
 
-// on load
 document.addEventListener('DOMContentLoaded', () => {
-  // 如果已经完成，直接显示完成页
   if(localStorage.getItem('puzzle_finished') === 'true'){
     currentNodeId = nodes.length;
     loadNode(currentNodeId);
-    showMessage('你已经完成了本次演示（本地存储）。若要重玩请点击下方按钮。','success');
+    showMessage('你已经完成啦 💖 如果想重新开始，点击下方按钮','success');
     const resetBtn = document.createElement('button');
     resetBtn.className = 'btn secondary';
     resetBtn.textContent = '重置进度';
