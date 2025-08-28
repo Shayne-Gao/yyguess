@@ -101,6 +101,11 @@
     50% { transform: translate(-50%,-20px) scale(1.2); opacity: 0.7; }
     100% { transform: translate(-50%,-40px) scale(1); opacity: 0; }
   }
+  /* 播放按钮区域 */
+  .music-control {
+    text-align: center;
+    margin-bottom: 12px;
+  }
 </style>
 </head>
 <body>
@@ -108,6 +113,15 @@
     <div class="hearts">💖</div>
     <h1>七夕解谜小冒险</h1>
     <p class="lead">亲爱的，跟随这条爱的线索，一步步走向惊喜吧 ✨</p>
+
+    <!-- 音乐控制按钮 -->
+    <div class="music-control">
+      <button id="musicBtn" class="btn secondary">播放音乐 🎶</button>
+    </div>
+    <audio id="bgm" loop>
+      <!-- 你可以换成自己的 mp3 链接，比如七夕歌单里的某首歌 -->
+      <source src="https://ri-sycdn.kuwo.cn/16cac2c4564e23cb5fbe28ba91ce40b6/68b00647/resource/n3/58/86/1033143570.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="game">
       <div class="prompt" id="promptTxt"></div>
@@ -163,7 +177,9 @@ const el = {
   hintBox: document.getElementById('hintBox'),
   message: document.getElementById('message'),
   nextArea: document.getElementById('nextArea'),
-  progress: document.getElementById('progress')
+  progress: document.getElementById('progress'),
+  musicBtn: document.getElementById('musicBtn'),
+  bgm: document.getElementById('bgm')
 };
 
 function findNode(id){ return nodes.find(n => n.id === id); }
@@ -211,6 +227,17 @@ function showMessage(text, type){
   el.message.className = 'msg ' + (type === 'success' ? 'success':'error');
   el.message.innerHTML = text;
 }
+
+// 播放/暂停音乐
+el.musicBtn.addEventListener('click', () => {
+  if(el.bgm.paused){
+    el.bgm.play();
+    el.musicBtn.textContent = "暂停音乐 ⏸️";
+  } else {
+    el.bgm.pause();
+    el.musicBtn.textContent = "播放音乐 🎶";
+  }
+});
 
 el.submitBtn.addEventListener('click', checkAnswer);
 el.hintBtn.addEventListener('click', () => {
