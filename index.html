@@ -105,7 +105,7 @@
 
   <!-- 背景音乐 -->
   <audio id="bgm" loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    <source src="https://ri-sycdn.kuwo.cn/16cac2c4564e23cb5fbe28ba91ce40b6/68b00647/resource/n3/58/86/1033143570.mp3" type="audio/mpeg">
   </audio>
 
 <script>
@@ -180,4 +180,66 @@ function checkAnswer(){
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.innerText = '进入下一关 ➡️';
-      btn.onclick = ()
+      btn.onclick = () => loadNode(nextNode.id);
+      el.nextArea.appendChild(btn);
+    } else {
+      localStorage.setItem('puzzle_finished', 'true');
+    }
+  } else {
+    showMessage('答案不对，再想想～','error');
+  }
+}
+
+function showMessage(text, type){
+  el.message.classList.remove('hidden');
+  el.message.style.background = type === 'success' ? '#fff0f5' : '#fff5f7';
+  el.message.style.border = type === 'success' ? '1px solid #f5a9c1' : '1px solid #f3b0b0';
+  el.message.style.color = type === 'success' ? '#a1104d' : '#9a1b1b';
+  el.message.innerHTML = text;
+}
+
+// 播放/暂停音乐
+el.musicBtn.addEventListener('click', () => {
+  if(el.bgm.paused){
+    el.bgm.play();
+    el.musicBtn.textContent = "暂停音乐 ⏸️";
+  } else {
+    el.bgm.pause();
+    el.musicBtn.textContent = "播放音乐 🎶";
+  }
+});
+
+// 开始游戏
+el.startBtn.addEventListener('click', () => {
+  el.intro.classList.add('hidden');
+  el.gameCard.classList.remove('hidden');
+  loadNode(1); // 从第一关开始
+});
+
+el.submitBtn.addEventListener('click', checkAnswer);
+el.hintBtn.addEventListener('click', () => {
+  el.hintBox.classList.toggle('hidden');
+});
+el.answerInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ checkAnswer(); } });
+
+document.addEventListener('DOMContentLoaded', () => {
+  if(localStorage.getItem('puzzle_finished') === 'true'){
+    currentNodeId = nodes.length;
+    loadNode(currentNodeId);
+    showMessage('你已经完成啦 💖 如果想重新开始，点击下方按钮','success');
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'btn secondary';
+    resetBtn.textContent = '重置进度';
+    resetBtn.onclick = () => {
+      localStorage.removeItem('puzzle_current_node');
+      localStorage.removeItem('puzzle_finished');
+      currentNodeId = 1;
+      loadNode(1);
+      el.message.classList.add('hidden');
+    };
+    el.nextArea.appendChild(resetBtn);
+  }
+});
+</script>
+</body>
+</html>
