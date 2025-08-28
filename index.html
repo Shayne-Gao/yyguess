@@ -65,6 +65,49 @@
   }
   .hidden { display: none; }
   footer { margin-top: 18px; font-size: 13px; color: #888; text-align: center; }
+
+  /* 输入区域容器 */
+  .input-area {
+    margin-top: 28px; /* 原本16px + 12px额外间距 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  /* 输入框样式 */
+  #answerInput {
+    width: 80%;
+    max-width: 360px;
+    padding: 12px;
+    border: 2px solid #ffd6e0;
+    border-radius: 12px;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  #answerInput:focus {
+    border-color: #ff7aa2;
+    box-shadow: 0 0 6px rgba(255, 122, 162, 0.4);
+  }
+  /* 抖动动画 */
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+  }
+  .shake {
+    animation: shake 0.4s;
+  }
+
+  /* 按钮行 */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
 </style>
 </head>
 <body>
@@ -89,12 +132,14 @@
     <h1>七夕解谜小冒险</h1>
     <div id="game">
       <div class="prompt" id="promptTxt"></div>
-      <input id="answerInput" type="text" placeholder="输入答案..." autocomplete="off" />
-      <div>
-        <button id="submitBtn" class="btn">提交答案</button>
-        <button id="hintBtn" class="btn secondary">小提示 💌</button>
+      <div class="input-area">
+        <input id="answerInput" type="text" placeholder="输入答案..." autocomplete="off" />
+        <div class="btn-row">
+          <button id="submitBtn" class="btn">提交答案</button>
+          <button id="hintBtn" class="btn secondary">小提示 💌</button>
+          <button id="musicBtnGame" class="btn secondary">暂停音乐 ⏸️</button>
+        </div>
       </div>
-
       <div id="hintBox" class="hidden" style="margin-top:12px; padding:10px; background:#fff8f9; border-left:4px solid #ffb3c1; border-radius:6px;"></div>
       <div id="message" class="hidden" style="margin-top:12px; padding:10px; border-radius:6px;"></div>
       <div id="nextArea" style="margin-top:12px;"></div>
@@ -147,6 +192,7 @@ const el = {
   nextArea: document.getElementById('nextArea'),
   progress: document.getElementById('progress'),
   musicBtn: document.getElementById('musicBtn'),
+  musicBtnGame: document.getElementById('musicBtnGame'),
   bgm: document.getElementById('bgm')
 };
 
@@ -187,6 +233,9 @@ function checkAnswer(){
     }
   } else {
     showMessage('答案不对，再想想～','error');
+    // 输入框抖动
+    el.answerInput.classList.add('shake');
+    setTimeout(() => el.answerInput.classList.remove('shake'), 400);
   }
 }
 
@@ -198,14 +247,28 @@ function showMessage(text, type){
   el.message.innerHTML = text;
 }
 
-// 播放/暂停音乐
+// 播放/暂停音乐（首页）
 el.musicBtn.addEventListener('click', () => {
   if(el.bgm.paused){
     el.bgm.play();
     el.musicBtn.textContent = "暂停音乐 ⏸️";
+    el.musicBtnGame.textContent = "暂停音乐 ⏸️";
   } else {
     el.bgm.pause();
     el.musicBtn.textContent = "播放音乐 🎶";
+    el.musicBtnGame.textContent = "播放音乐 🎶";
+  }
+});
+// 播放/暂停音乐（游戏页）
+el.musicBtnGame.addEventListener('click', () => {
+  if(el.bgm.paused){
+    el.bgm.play();
+    el.musicBtn.textContent = "暂停音乐 ⏸️";
+    el.musicBtnGame.textContent = "暂停音乐 ⏸️";
+  } else {
+    el.bgm.pause();
+    el.musicBtn.textContent = "播放音乐 🎶";
+    el.musicBtnGame.textContent = "播放音乐 🎶";
   }
 });
 
