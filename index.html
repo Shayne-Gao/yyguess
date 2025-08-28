@@ -130,7 +130,7 @@
 
   <!-- 游戏页面 -->
   <div id="gameCard" class="card hidden">
-    <h1>七夕解谜小冒险</h1>
+    <h1> 给小尾巴的七夕谜题 </h1>
     <div id="game">
       <div class="prompt" id="promptTxt"></div>
       <div class="input-area">
@@ -227,7 +227,7 @@ const el = {
 };
 
 function findNode(id){ return nodes.find(n => n.id === id); }
-function renderProgress(){ el.progress.textContent = `进度：第 ${currentNodeId} / ${nodes.length} 步`; }
+function renderProgress(){ el.progress.textContent = `当前进度：第 ${currentNodeId} / ${nodes.length} 步`; }
 
 function loadNode(id){
   const node = findNode(id);
