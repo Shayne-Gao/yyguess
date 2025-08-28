@@ -3,126 +3,90 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>七夕解谜小冒险 💖</title>
+<title>七夕特别礼物 💝</title>
 <style>
   body {
     font-family: "Helvetica Neue", Arial, sans-serif;
     background: linear-gradient(135deg, #ffe6eb, #fff0f5);
-    color: #333;
-    padding: 24px;
-    background-attachment: fixed;
+    margin: 0; padding: 0;
   }
   .card {
     max-width: 760px;
-    margin: 18px auto;
+    margin: 40px auto;
     padding: 22px;
     background: #fff;
-    border-radius: 16px;
+    border-radius: 18px;
     box-shadow: 0 8px 24px rgba(255, 120, 160, 0.25);
     position: relative;
+    text-align: center;
   }
   h1 {
-    margin: 0 0 8px;
-    font-size: 24px;
+    margin: 0 0 16px;
+    font-size: 28px;
     color: #e25590;
-    text-align: center;
   }
-  p.lead {
-    margin: 0 0 18px;
+  p {
     color: #555;
-    text-align: center;
-  }
-  .prompt {
-    font-weight: 600;
-    margin: 12px 0;
-  }
-  input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #f3c1d8;
-    font-size: 16px;
+    line-height: 1.6;
   }
   .btn {
     display: inline-block;
-    margin-top: 12px;
-    padding: 10px 14px;
-    border-radius: 8px;
+    margin-top: 18px;
+    padding: 12px 20px;
+    border-radius: 10px;
     background: #ff7aa2;
     color: #fff;
     border: none;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.2s;
+    font-size: 16px;
   }
-  .btn:hover { background: #ff5a8c; }
+  .btn:hover {
+    background: #ff5a8c;
+    transform: scale(1.05);
+  }
   .btn.secondary {
     background: #ffe4ec;
     color: #d6336c;
     border: 1px solid #f9b5d1;
   }
-  .hint {
-    margin-top: 12px;
-    padding: 10px;
-    background: #fff8f9;
-    border-left: 4px solid #ffb3c1;
-    border-radius: 6px;
-    display: none;
-  }
-  .msg {
-    margin-top: 12px;
-    padding: 10px;
-    border-radius: 6px;
-  }
-  .msg.success {
-    background: #fff0f5;
-    border: 1px solid #f5a9c1;
-    color: #a1104d;
-  }
-  .msg.error {
-    background: #fff5f7;
-    border: 1px solid #f3b0b0;
-    color: #9a1b1b;
-  }
-  .progress { font-size: 13px; color: #888; margin-top: 10px; }
-  .small { font-size: 13px; color: #999; text-align: center; }
-  footer { margin-top: 18px; font-size: 13px; color: #888; text-align: center; }
-  /* 小爱心动画 */
   .hearts {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 20px;
-    color: #ff5a8c;
+    font-size: 28px;
     animation: float 3s infinite;
+    margin: 12px 0;
   }
   @keyframes float {
-    0% { transform: translate(-50%,0) scale(1); opacity: 1; }
-    50% { transform: translate(-50%,-20px) scale(1.2); opacity: 0.7; }
-    100% { transform: translate(-50%,-40px) scale(1); opacity: 0; }
+    0% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(-15px); opacity: 0.7; }
+    100% { transform: translateY(-30px); opacity: 0; }
   }
-  /* 播放按钮区域 */
   .music-control {
-    text-align: center;
-    margin-bottom: 12px;
+    margin-top: 16px;
   }
+  .hidden { display: none; }
+  footer { margin-top: 18px; font-size: 13px; color: #888; text-align: center; }
 </style>
 </head>
 <body>
-  <div class="card">
-    <div class="hearts">💖</div>
-    <h1>七夕解谜小冒险</h1>
-    <p class="lead">亲爱的，跟随这条爱的线索，一步步走向惊喜吧 ✨</p>
-
-    <!-- 音乐控制按钮 -->
+  <!-- 开场页面 -->
+  <div id="intro" class="card">
+    <div class="hearts">💖✨💝</div>
+    <h1>七夕特别的礼物</h1>
+    <p id="introText">
+      亲爱的，今天是属于我们的七夕节 💕<br/>
+      这里有一份我为你准备的小小解谜礼物 🎁<br/>
+      每一道题目，都是我们故事的一部分 ✨<br/>
+      希望你能带着笑容，一步步走向最终的惊喜 💌
+    </p>
     <div class="music-control">
       <button id="musicBtn" class="btn secondary">播放音乐 🎶</button>
     </div>
-    <audio id="bgm" loop>
-      <!-- 你可以换成自己的 mp3 链接，比如七夕歌单里的某首歌 -->
-      <source src="https://ri-sycdn.kuwo.cn/16cac2c4564e23cb5fbe28ba91ce40b6/68b00647/resource/n3/58/86/1033143570.mp3" type="audio/mpeg">
-    </audio>
+    <button id="startBtn" class="btn">开始冒险 ➡️</button>
+  </div>
 
+  <!-- 游戏页面 -->
+  <div id="gameCard" class="card hidden">
+    <h1>七夕解谜小冒险</h1>
     <div id="game">
       <div class="prompt" id="promptTxt"></div>
       <input id="answerInput" type="text" placeholder="输入答案..." autocomplete="off" />
@@ -131,36 +95,38 @@
         <button id="hintBtn" class="btn secondary">小提示 💌</button>
       </div>
 
-      <div id="hintBox" class="hint"></div>
-      <div id="message" class="msg" style="display:none"></div>
+      <div id="hintBox" class="hidden" style="margin-top:12px; padding:10px; background:#fff8f9; border-left:4px solid #ffb3c1; border-radius:6px;"></div>
+      <div id="message" class="hidden" style="margin-top:12px; padding:10px; border-radius:6px;"></div>
       <div id="nextArea" style="margin-top:12px;"></div>
-      <div class="progress" id="progress"></div>
+      <div id="progress" style="margin-top:10px; font-size:13px; color:#888;"></div>
     </div>
-
-    <footer>
-      <div class="small">Happy 七夕 ❤️ 爱在解谜的每一步。</div>
-    </footer>
+    <footer>Happy 七夕 ❤️ 爱在解谜的每一步。</footer>
   </div>
+
+  <!-- 背景音乐 -->
+  <audio id="bgm" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
 
 <script>
 const nodes = [
   {
     id: 1,
-    prompt: "第一关 💕：\n在我们的合照里，你最喜欢的那个笑容对应的月份，就是密码（输入月份数字）。",
+    prompt: "第一关 💕：在我们的合照里，你最喜欢的那个笑容对应的月份，就是密码（输入月份数字）。",
     answer: "8",
     hint: "七夕在八月哦～",
     successText: "太棒了！💖 继续前往下一关，更多的回忆在等你～"
   },
   {
     id: 2,
-    prompt: "第二关 🌙：\n还记得第一次一起看电影吗？那部电影的第一个字母（大写）就是密码。",
+    prompt: "第二关 🌙：还记得第一次一起看电影吗？那部电影的第一个字母（大写）就是密码。",
     answer: "L",
     hint: "答案在我们第一次电影院的票根里～",
     successText: "好浪漫！💌 继续前进吧。"
   },
   {
     id: 3,
-    prompt: "最后一关 🌹：\n输入你对我常说的三个字（拼音大写）。",
+    prompt: "最后一关 🌹：输入你对我常说的三个字（拼音大写）。",
     answer: "WOAI NI",
     hint: "三个字，是你每天挂在嘴边的～",
     successText: "恭喜通关！🎉 七夕快乐，我爱你 ❤️ 礼物在等你 👉 <strong>https://example.com/yourgift</strong>"
@@ -168,8 +134,10 @@ const nodes = [
 ];
 
 let currentNodeId = parseInt(localStorage.getItem('puzzle_current_node') || '1', 10);
-
 const el = {
+  intro: document.getElementById('intro'),
+  startBtn: document.getElementById('startBtn'),
+  gameCard: document.getElementById('gameCard'),
   promptTxt: document.getElementById('promptTxt'),
   answerInput: document.getElementById('answerInput'),
   submitBtn: document.getElementById('submitBtn'),
@@ -191,9 +159,9 @@ function loadNode(id){
   currentNodeId = node.id;
   localStorage.setItem('puzzle_current_node', String(currentNodeId));
   el.promptTxt.innerText = node.prompt;
-  el.hintBox.style.display = 'none';
+  el.hintBox.classList.add('hidden');
   el.hintBox.innerText = node.hint;
-  el.message.style.display = 'none';
+  el.message.classList.add('hidden');
   el.answerInput.value = "";
   el.answerInput.focus();
   el.nextArea.innerHTML = "";
@@ -212,59 +180,4 @@ function checkAnswer(){
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.innerText = '进入下一关 ➡️';
-      btn.onclick = () => loadNode(nextNode.id);
-      el.nextArea.appendChild(btn);
-    } else {
-      localStorage.setItem('puzzle_finished', 'true');
-    }
-  } else {
-    showMessage('答案不对，再想想～','error');
-  }
-}
-
-function showMessage(text, type){
-  el.message.style.display = 'block';
-  el.message.className = 'msg ' + (type === 'success' ? 'success':'error');
-  el.message.innerHTML = text;
-}
-
-// 播放/暂停音乐
-el.musicBtn.addEventListener('click', () => {
-  if(el.bgm.paused){
-    el.bgm.play();
-    el.musicBtn.textContent = "暂停音乐 ⏸️";
-  } else {
-    el.bgm.pause();
-    el.musicBtn.textContent = "播放音乐 🎶";
-  }
-});
-
-el.submitBtn.addEventListener('click', checkAnswer);
-el.hintBtn.addEventListener('click', () => {
-  el.hintBox.style.display = el.hintBox.style.display === 'none' ? 'block' : 'none';
-});
-el.answerInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ checkAnswer(); } });
-
-document.addEventListener('DOMContentLoaded', () => {
-  if(localStorage.getItem('puzzle_finished') === 'true'){
-    currentNodeId = nodes.length;
-    loadNode(currentNodeId);
-    showMessage('你已经完成啦 💖 如果想重新开始，点击下方按钮','success');
-    const resetBtn = document.createElement('button');
-    resetBtn.className = 'btn secondary';
-    resetBtn.textContent = '重置进度';
-    resetBtn.onclick = () => {
-      localStorage.removeItem('puzzle_current_node');
-      localStorage.removeItem('puzzle_finished');
-      currentNodeId = 1;
-      loadNode(1);
-      el.message.style.display = 'none';
-    };
-    el.nextArea.appendChild(resetBtn);
-  } else {
-    loadNode(currentNodeId);
-  }
-});
-</script>
-</body>
-</html>
+      btn.onclick = ()
